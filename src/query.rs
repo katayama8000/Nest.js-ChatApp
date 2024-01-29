@@ -46,7 +46,7 @@ impl Query {
     //     completed
     //   }
     // }
-    pub async fn get_todo(&self, num: i32) -> async_graphql::Result<JsonPlaceholderResult> {
+    pub async fn get_todo(&self, num: i32) -> async_graphql::Result<JsonPlaceholderQueryResult> {
         let client = reqwest::Client::new();
         let res = client
             .get(&format!(
@@ -56,7 +56,7 @@ impl Query {
             .send()
             .await?;
         let body = res.text().await?;
-        let json: JsonPlaceholderResult = serde_json::from_str(&body)?;
+        let json: JsonPlaceholderQueryResult = serde_json::from_str(&body)?;
         Ok(json)
     }
 }
@@ -64,7 +64,7 @@ impl Query {
 // json
 #[derive(async_graphql::SimpleObject, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct JsonPlaceholderResult {
+pub struct JsonPlaceholderQueryResult {
     pub user_id: i32,
     pub id: i32,
     pub title: String,
