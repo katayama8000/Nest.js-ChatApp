@@ -1,28 +1,13 @@
+mod mutation;
+mod query;
+
 use std::error::Error;
 
-use async_graphql::{http::GraphiQLSource, EmptyMutation, EmptySubscription, Object, Schema};
+use async_graphql::{http::GraphiQLSource, EmptySubscription, Schema};
 use async_graphql_poem::*;
 use poem::{listener::TcpListener, web::Html, *};
 
-struct Query;
-
-#[Object]
-impl Query {
-    // query {
-    //   howdy
-    // }
-    async fn howdy(&self) -> &'static str {
-        "partner"
-    }
-
-    // query {
-    //   hello(name: "foo")
-    // }
-
-    async fn hello(&self, name: String) -> String {
-        format!("Hello, {}!", name)
-    }
-}
+use crate::{mutation::Mutation, query::Query};
 
 #[handler]
 async fn graphiql() -> impl IntoResponse {
@@ -32,7 +17,7 @@ async fn graphiql() -> impl IntoResponse {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     // create the schema
-    let schema = Schema::build(Query, EmptyMutation, EmptySubscription).finish();
+    let schema = Schema::build(Query, Mutation, EmptySubscription).finish();
 
     // start the http server
     let app = Route::new().at("/", get(graphiql).post(GraphQL::new(schema)));
