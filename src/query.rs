@@ -17,7 +17,6 @@ impl Query {
         format!("Hello, {}!", name)
     }
 
-    // 新しい複雑なクエリの例を追加
     // query {
     //   complexQuery {
     //     field1
@@ -39,16 +38,37 @@ impl Query {
         }
     }
 
-    // pub async fn json_placeholder(&self) -> async_graphql::Result<serde_json::Value> {
-    //     let client = reqwest::Client::new();
-    //     let res = client
-    //         .get("https://jsonplaceholder.typicode.com/todos/1")
-    //         .send()
-    //         .await?;
-    //     let body = res.text().await?;
-    //     let json: serde_json::Value = serde_json::from_str(&body)?;
-    //     Ok(json)
+    // query {
+    //   getTodo(num: 1){
+    //     userId
+    //     id
+    //     title
+    //     completed
+    //   }
     // }
+    pub async fn get_todo(&self, num: i32) -> async_graphql::Result<JsonPlaceholderResult> {
+        let client = reqwest::Client::new();
+        let res = client
+            .get(&format!(
+                "https://jsonplaceholder.typicode.com/todos/{}",
+                num
+            ))
+            .send()
+            .await?;
+        let body = res.text().await?;
+        let json: JsonPlaceholderResult = serde_json::from_str(&body)?;
+        Ok(json)
+    }
+}
+
+// json
+#[derive(async_graphql::SimpleObject, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct JsonPlaceholderResult {
+    pub user_id: i32,
+    pub id: i32,
+    pub title: String,
+    pub completed: bool,
 }
 
 #[derive(async_graphql::SimpleObject)]
