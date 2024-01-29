@@ -6,14 +6,21 @@ use poem::{listener::TcpListener, web::Html, *};
 
 struct Query;
 
-// query {
-//   howdy
-// }
-
 #[Object]
 impl Query {
+    // query {
+    //   howdy
+    // }
     async fn howdy(&self) -> &'static str {
         "partner"
+    }
+
+    // query {
+    //   hello(name: "foo")
+    // }
+
+    async fn hello(&self, name: String) -> String {
+        format!("Hello, {}!", name)
     }
 }
 
