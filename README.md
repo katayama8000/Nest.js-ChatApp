@@ -1,5 +1,2 @@
-## This repository is for understanding async-graphql
+## This repository is for understanding async-graphql and DDD.
 
-- async-graphql
-  - https://github.com/async-graphql/async-graphql
-  - https://github.com/async-graphql/async-graphql/tree/master/integrations/axum
