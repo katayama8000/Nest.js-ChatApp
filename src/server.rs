@@ -1,14 +1,28 @@
 use std::sync::Arc;
 
 use crate::{
-    api::app_state::AppState, command::command_handler::CommandHandler,
+    api::app_state::AppState,
+    command::{
+        command_handler::CommandHandler,
+        interface::circle_repository_interface::{CircleRepositoryInterface, HasCircleRepository},
+    },
+    infrastructure::circle_repository::CircleRepository,
     query::query_handler::QueryHandler,
 };
 
 pub fn new() -> anyhow::Result<AppState> {
-    struct CommandHandlerStruct {}
+    struct CommandHandlerStruct {
+        circle_repository: Arc<dyn CircleRepositoryInterface + Send + Sync>,
+    }
     impl CommandHandler for CommandHandlerStruct {}
-    let command_handler = CommandHandlerStruct {};
+    impl HasCircleRepository for CommandHandlerStruct {
+        fn circle_repository(&self) -> Arc<dyn CircleRepositoryInterface + Send + Sync> {
+            self.circle_repository.clone()
+        }
+    }
+    let command_handler = CommandHandlerStruct {
+        circle_repository: Arc::new(CircleRepository::new()),
+    };
 
     struct QueryHandlerStruct {}
     impl QueryHandler for QueryHandlerStruct {}

@@ -1,6 +1,7 @@
 mod api;
 mod command;
 mod domain;
+mod infrastructure;
 mod mutation_root;
 mod query;
 mod query_root;
@@ -29,7 +30,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let app = Router::new()
         .route("/", get(graphiql).post_service(GraphQL::new(schema)))
         .route("/version", get(version))
-        .with_state(shared_state); // Wrap the version function inside a closure
+        .with_state(shared_state);
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
         .await
         .unwrap();
