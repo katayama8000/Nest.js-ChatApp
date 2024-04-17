@@ -14,12 +14,12 @@ pub fn new() -> anyhow::Result<AppState> {
     struct CommandHandlerStruct {
         circle_repository: Arc<dyn CircleRepositoryInterface + Send + Sync>,
     }
-    impl CommandHandler for CommandHandlerStruct {}
     impl HasCircleRepository for CommandHandlerStruct {
         fn circle_repository(&self) -> Arc<dyn CircleRepositoryInterface + Send + Sync> {
             self.circle_repository.clone()
         }
     }
+    impl CommandHandler for CommandHandlerStruct {}
     let command_handler = CommandHandlerStruct {
         circle_repository: Arc::new(CircleRepository::new()),
     };
