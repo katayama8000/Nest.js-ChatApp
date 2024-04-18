@@ -1,5 +1,5 @@
 use axum::Router;
-
+pub mod graphql;
 use crate::{command::command_handler::HasCommandHandler, query::query_handler::HasQueryHandler};
 
 pub fn route<T: Clone + HasCommandHandler + HasQueryHandler + Send + Sync + 'static>(
